@@ -1,6 +1,11 @@
 
        function saveDrugs(url,i,id)  {
-           $("#addDrugsResult"+i).load(url + "?" + "idMood=" + id  + "&" +  $("#addDrugsssss"+i).serialize() );
+           var result = $("#addDrugsResult"+i).load(url + "?" + "idMood=" + id  + "&" +  $("#addDrugsssss"+i).serialize(),function() {
+               if (result.text() =="Pomyslnie dodano") {
+                   resetDrugs(i);
+                   //alert("dobrze");
+               }
+           });
        }     
        
        function showDrugs(url,i,id) {
@@ -10,31 +15,62 @@
        
 function addDrugs(url = null,i = null,id = null) {
     if (i == null) {
+        
         $(".drugss").append("<table class='table addMood drugs' id=\"drug_\"><tr><td width='50%' class='center'>Nazwa leku </td><td class='center'><input type='text' name='name[]' class='form-control'></td></tr><tr><td width='50%' class='center' rowspan=\"2\"><br>Dawka leku </td><td class='center'><input type='text' name='dose[]' class='form-control'></td></tr><tr>    <td class='center'>                <select name='type[]' class='form-control form-control-lg'><option value='1'>Mg</option><option value='2'>Militry</option><option value='3'>Ilości</option></select></td></tr><tr><td rowspan='2' class='center'><br>Data wzięcia</td><td><input type='date' name='date[]' class='form-control'></td></tr><tr><td class='center'><input type='time' name='time[]' class='form-control'></td></tr><tr>                                                            <td colspan=\"2\" class='center'><div class=\"center\"><input type=\"button\" onclick='deleteDrugs()'  value=\"Usuń lek\" class=\"btn btn-primary drugsss\"></div></td></tr></table>").html();
     }
+    
     else {
         var bool = false;
         if ($(".drugss"+i).text() == "") {
             bool = true;
         }
         var drugs = "drugs"+i;
-        
-        $(".drugss"+i).append("<div class='newline'></div><div class='addDrugssss '" + drugs  + "' id=\"drug_\"><div class=tr><div class='td'>Nazwa leku</div><div class='td'><input type='text' name='name[]' class='form-control'></div></div><div class=newline></div><div class=tr><div class='td'><br>Dawka leku</div><div class='td'><input type='text' name='dose[]' class='form-control'><br><select name=type[] class='form-control'><option value='1'>Mg</option><option value='2'>Militry</option><option value='3'>Ilości</option></select></div></div><div class='newline'></div><div class=tr><div class='td'><br>Dawka leku</div><div class='td'><input type='date' name='date[]' class='form-control'><br><input type='time' name='time[]' class='form-control'>             </div></div>      <div class='newline'></div><div class='tr'><div class=' tdCenter'><input type='button' value='Usuń wpis' onclick='deleteDrugs(true," + i + ")' class='btn btn-primary'></div></div>           </div>").html();
+        $("#addDrugsButton"+i).prop('disabled', true);
+        $(".drugss"+i).html("<div class='newline'></div><div class='addDrugssss '" + drugs  + "' id=\"drug_\"><div class=tr><div class='td'>Nazwa leku</div><div class='td'><input type='text' name='name[]' class='form-control'></div></div><div class=newline></div><div class=tr><div class='td'><br>Dawka leku</div><div class='td'><input type='text' name='dose[]' class='form-control'><br><select name=type[] class='form-control'><option value='1'>Mg</option><option value='2'>Militry</option><option value='3'>Ilości</option></select></div></div><div class='newline'></div><div class=tr><div class='td'><br>Dawka leku</div><div class='td'><input type='date' name='date[]' class='form-control'><br><input type='time' name='time[]' class='form-control'>             </div></div>      <div class='newline'></div><div class='tr'><div class=' tdCenter'><input type='button' value='Usuń wpis' onclick='deleteDrugs(true," + i + ")' class='btn btn-primary'></div></div>           </div>");
         
   $(".drugsss"+i).html("      <div class='addDrugssss  center' style=' width: 80%;'" + drugs  + "'   id=\"drug_\"><div class='tr'><div class='tdCenter'><input type='button' onclick=saveDrugs('" + url + "'," + i + "," + id + ") class='btn btn-primary' value='Zapisz leki'></div></div></div>");
 
 
 
     }
-}                                                                                                                                                                                                                                                                                           
-
+    
+}
+function offHour() {
+    //alert("dobrze");
+    if($("#dayFor").is(':checked'))
+    {
+        $("#hourTo").prop('disabled', true);
+        $("#hourFrom").prop('disabled', true);
+    }
+    else {
+        $("#hourTo").prop('disabled', false);
+        $("#hourFrom").prop('disabled', false);
+    }
+}
+function resetDrugs(i) {
+    //alert("jakks");
+    $(".drugss"+i).html("");
+            $(".drugsss"+i).html("");
+            $("#addDrugsButton"+i).prop('disabled', false);
+}
+function editMood(url,id,i) {
+    $("#showFieldText"+i).toggle(120);
+    $("#showFieldText"+i).load(url + "?id=" + id + "&i=" + i);
+}
 function deleteDrugsId(url,id) {
     var con = confirm("Czy na pewno usunąć");
     if (con == true) {
         $("#DrugsTr"+id).load(url + "?id=" + id);
     }
 }
-
+function editMoodAction(url,id,i) {
+    var levelMood = $("#levelMood").val();
+    var levelAnxiety = $("#levelAnxiety").val();
+    var levelNervousness = $("#levelNervousness").val();
+    var levelStimulation = $("#levelStimulation").val();
+    //alert(i);
+    $("#viewEditMood"+i).load(url + "?id=" + id + "&levelMood=" + levelMood + "&levelAnxiety=" + levelAnxiety + "&levelNervousness=" + levelNervousness + "&levelStimulation=" + levelStimulation);
+}
 function addMood(url) {
     
     $("#addResult").load(url  + "?" +  $( "form" ).serialize());
@@ -55,9 +91,11 @@ function deleteDrugs(bool = false,i=0) {
 
         $(".drugs"+i).remove();
 
-        alert(i);
+        //alert(i);
         if (($(".drugss"+i).text() != "")) {
-            $(".drugss"+i).remove();
+            $(".drugss"+i).html("");
+            $(".drugsss"+i).html("");
+            $("#addDrugsButton"+i).prop('disabled', false);
         }
         else {
 
@@ -128,7 +166,7 @@ function deleteSleep(url,id,i) {
     var con = confirm("Czy na pewno usunąć");
     
     if (con == true) {
-        alert(id);
+        //alert(id);
         $(".idMood"+i).load(url + "?id=" + id);
     }
 }

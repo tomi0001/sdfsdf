@@ -20,6 +20,7 @@ use App\Mood as Moods;
 use App\Sleep as Sleep;
 use App\Drug as Drug;
 use App\Http\Services\mood as Mood;
+use App\Http\Services\common as Common;
 use App\Forwarding_drug as Forwarding_drug;
 //class User
 class search  {
@@ -297,7 +298,9 @@ class search  {
         
     }
     private function setWhere() {
+        $Common = new Common;
         $second = $this->setHour();
+        $stringSearch = $Common->charset_utf_fix2(Input::get("what_work"));
         if (Input::get("moodFrom") != "") {
             $this->qestion->whereRaw("level_mood >=' " . Input::get("moodFrom") . "'");
         }
@@ -323,7 +326,10 @@ class search  {
             $this->qestion->where("level_stimulation","<=",Input::get("stimulationTo"));
         }
         if (Input::get("what_work") != "") {
-            $this->qestion->where("what_work","LIKE","%" . Input::get("what_work") . "%");
+            $this->qestion->where("what_work","LIKE","%" . $stringSearch . "%");
+        }
+        if (Input::get("ifText") == "on") {
+            $this->qestion->where("what_work","!=","");
         }
         if ($second[0] != 0) {
             $this->qestion->whereRaw("(TIMESTAMPDIFF (SECOND, date_start , date_end)) >= '" . $second[0] . "'");

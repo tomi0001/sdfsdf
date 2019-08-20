@@ -1,4 +1,4 @@
-<table class="" width="40%" align="center">
+<table class="table" width="100%" align="center">
     
 @if ($type == "hour")
     @for ($i=0;$i < count($hour);$i++)

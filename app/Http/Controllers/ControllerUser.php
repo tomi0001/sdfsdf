@@ -56,5 +56,9 @@ class ControllerUser extends BaseController
     public function login() {
         return View("User.Login");
     }
-    
+    public function Setting() {
+        if ( (Auth::check()) ) {
+            return View("/User/Setting")->with("startDay",Auth::User()->start_day);
+        }
+    }
 }

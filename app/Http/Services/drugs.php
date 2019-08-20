@@ -23,7 +23,9 @@ use App\Forwarding_drug as Forwarding_drug;
 class drugs  {
     public $arrayDrugsId = [];
     public function checkDrugs($name,$dose,$date,$time) {
-        
+        if ($name == "") {
+            return;
+        }
         for ($i = 0;$i < count($name);$i++) {
             if ($name[$i] == "") {
                 array_push($this->errors, "Musisz uzupełnić nazwę któregoś z leków");
@@ -42,7 +44,6 @@ class drugs  {
         $Drug->dose = $dose;
         $Drug->date = $date;
         $Drug->id_users = Auth::User()->id;
-        $Drug->type = $type;
         $Drug->save();
         $id = $Drug->orderBy("id","DESC")->first();
         array_push($this->arrayDrugsId, $id->id);
@@ -58,13 +59,14 @@ class drugs  {
         }
         
     }
+
     public function selectDrugs($idMood) {
         $Drug = new Forwarding_drug;
         $list = $Drug->join("drugs","forwarding_drugs.id_drugs","drugs.id")
                 ->selectRaw("drugs.name as name")
                 ->selectRaw("drugs.dose as dose")
                 ->selectRaw("right(drugs.date,8) as date")
-                ->selectRaw("drugs.type as type")
+               
                 ->selectRaw("drugs.id as id")
                 ->where("drugs.id_users",Auth::User()->id)
                 ->where("forwarding_drugs.id_mood",$idMood)->get();

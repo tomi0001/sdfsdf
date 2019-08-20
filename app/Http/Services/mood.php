@@ -22,7 +22,6 @@ use App\Http\Services\drugs as Drugs;
 use App\Http\Services\common as Common;
 use App\Http\Services\calendar as kalendar;
 
-//class User
 class mood extends Drugs {
     public $errors = [];
     public $second1;
@@ -126,16 +125,16 @@ class mood extends Drugs {
         if ($array[$type] >= 0  and  $array[$type] < 0.03) {
             return 0;
         }
-        if ($array[$type] >= 0.03  and  $array[$type] < 0.07) {
+        if ($array[$type] >= 0.03  and  $array[$type] < 0.1) {
             return 1;
         }
-        if ($array[$type] >= 0.07  and  $array[$type] < 0.1) {
+        if ($array[$type] >= 0.1  and  $array[$type] < 0.2) {
             return 2;
         }
-        if ($array[$type] >= 0.1  and  $array[$type] < 0.2) {
+        if ($array[$type] >= 0.2  and  $array[$type] < 0.3) {
             return 3;
         }
-        if ($array[$type] >= 0.2  and  $array[$type] < 0.5) {
+        if ($array[$type] >= 0.3  and  $array[$type] < 0.5) {
             return 4;
         }
         if ($array[$type] >= 0.5  and  $array[$type] < 1) {
@@ -370,6 +369,7 @@ class mood extends Drugs {
                 ->where("moods.id_users",$idUsers)
                 ->where("moods.date_start",">=",$this->dateStart)
                 ->where("moods.date_start","<",$this->dateEnd)
+                ->groupBy("moods.id")
                 ->get();
 
         return $this->listMood;
@@ -485,6 +485,9 @@ class mood extends Drugs {
         $Moods->save();
         $id = $Moods->orderBy("id","DESC")->first();
         $this->idMood = $id->id;
+        if (empty(Input::get("name"))) {
+            return;
+        }
         for ($i=0;$i < count(Input::get("name"));$i++) {
             
             $this->addDrugs(Input::get("name")[$i],Input::get("dose")[$i],
@@ -512,7 +515,7 @@ class mood extends Drugs {
         }
     }
 
-    private function checkLevel($level,string $what) {
+    public function checkLevel($level,string $what) {
         if ($level == "") {
             array_push($this->level, 0);
             return;
@@ -556,6 +559,12 @@ class mood extends Drugs {
             return true;
         }
     }
+    public function setSecondMood($idMood) {
+        $Moods = new Moods;
+        $Idmo = $Moods->where("id_users",Auth::User()->id)->where("id",$idMood)->first();
+        $this->second1 = strtotime($Idmo->date_start);
+        $this->second2 = strtotime($Idmo->date_end);
+    }
     private function checkHour($dateStart,$dateEnd,$type = "Nastrój") {
         $this->second1 = strtotime($dateStart);
         $this->second2 = strtotime($dateEnd);
@@ -572,6 +581,11 @@ class mood extends Drugs {
             array_push($this->errors, "Nakładanie się $type");
         }
         
+    }
+    public function updateMood($levelMood,$levelAnxiety,$levelNervousness,$levelStimulation,$idMood) {
+        $Moods = new Moods;
+        $Moods->where("id",$idMood)->where("id_users",Auth::User()->id)
+                ->update(["level_mood"=>$levelMood,"level_anxiety"=>$levelAnxiety,"level_nervousness"=>$levelNervousness,"level_stimulation"=>$levelStimulation]);
     }
     public function showDescription() {
         $idUsers = Auth::User()->id;
@@ -596,6 +610,33 @@ class mood extends Drugs {
         $Sleep->where("id_users",$idUsers)
                 ->where("id",Input::get("id"))
                 ->delete();
+    }
+    public function selectMood($idMood) {
+        $Mood = new Moods;
+        $mood = $Mood->where("id",$idMood)
+                     ->where("id_users",Auth::User()->id)->first();
+        return $mood;
+    }
+    public function editmood() {
+        $Mood = new Moods;
+        $array = [];
+        $mood = $Mood->where("date_start",">=","2019-04-24 15:00:00")
+                      ->where("id_users",Auth::User()->id)->get();
+        foreach ($mood as $mood2) {
+            if ($mood2->level_mood < 0.24 or $mood2->level_mood > 0.24) {
+                $array["level_mood"] = ($mood2->level_mood - 0.24) * 10;
+            }
+            else  {
+                $array["level_mood"] = 0;
+            }
+
+                $array["level_anxiety"] = $mood2->level_anxiety * 10;
+                $array["level_nervousness"] = $mood2->level_nervousness * 10;
+                $array["level_stimulation"] = $mood2->level_stimulation  * 10;
+
+                $Mood->where("id",$mood2->id)->update($array);
+        }
+                
     }
     
 }

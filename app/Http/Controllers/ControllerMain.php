@@ -68,5 +68,11 @@ class ControllerMain extends BaseController
             return Redirect("/User/Login")->with("error","Wylogowałeś się");
         }
     }
+    public function editMood() {
+        if ( (Auth::check()) ) {
+           $Moods = new Mood;
+           $Moods->editmood();
+        }
+    }
     
 }

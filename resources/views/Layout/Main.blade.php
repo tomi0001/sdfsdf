@@ -29,7 +29,7 @@
                 
                 <div class="menu">
                     
-                    <a class="menu" href="{{url('/Produkt/Edit')}}">USTAWIENIA KONTA</a>
+                    <a class="menu" href="{{url('/User/Setting')}}">USTAWIENIA KONTA</a>
                     
                 </div>
                 <div class="menu">

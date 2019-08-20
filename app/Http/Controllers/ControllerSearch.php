@@ -70,9 +70,18 @@ class ControllerSearch extends BaseController
                     Input::get("yearFrom") . "-" . Input::get("monthFrom")  . "-" . Input::get("dayFrom"), 
                     Input::get("yearTo") . "-" . Input::get("monthTo")  . "-" . Input::get("dayTo"),
                     Input::get("type"),Input::get("day"));
-
+            //print ("<pre>");
+            //print_r ($list);
+  //          print ("<pre>");
+            
+            //var_dump($list);
+            
+//print_r($list);
+            //$a = $AI->sortMood([0.1,1,0.1,1]);
+            //var_dump($a);
             return View("Ajax.showAverage")->with("days",$AI->days)->with("list",$list)
-                    ->with("day",Input::get("day"))->with("harmony",$AI->table);
+                   ->with("day",Input::get("day"))->with("harmonyMood",$AI->tableMood)->with("harmonyAnxiety",$AI->tableAnxiety)
+                    ->with("harmonyNer",$AI->tableNer)->with("harmonyStimu",$AI->tableStimu);
         }
     }
 }

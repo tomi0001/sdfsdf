@@ -20,7 +20,7 @@
             <td width="20%"class="mini" rowspan="4">
                 <br><br><br><br>
                 Wartośc dla jednego dnia
-                <input type="checkbox" name="moodForDay" class="form-control typeMood">
+                <input type="checkbox" name="moodForDay" class="form-check-input typeMood">
             </td>
         </tr>
         <tr>
@@ -195,6 +195,16 @@
         </tr>
         <tr>
             <td class="center">
+                Wyszukaj tylko wpisy które mają jakiś text
+                
+            </td>
+            <td>
+                <input type="checkbox" class="form-check-input" name="ifText">
+                
+            </td>
+        </tr>
+        <tr>
+            <td class="center">
                 Wyszukaj następujące leki
                 
             </td>
@@ -278,7 +288,7 @@
                 </select>
             </td>
             <td class="center">
-                <select name="hourFrom" class="form-control">
+                <select name="hourFrom" id="hourFrom" class="form-control">
                     <option value=""></option>
                     @for ($i = 0;$i <= 23;$i++)
                     <option value="{{$i}}">{{$i}}</option>
@@ -327,7 +337,7 @@
                 </select>
             </td>
             <td class="center">
-                <select name="hourTo" class="form-control">
+                <select name="hourTo" id="hourTo" class="form-control">
                     <option value=""></option>
                     @for ($i = 0;$i <= 23;$i++)
                     <option value="{{$i}}">{{$i}}</option>
@@ -336,6 +346,9 @@
             </td>
             <td class="center">
                     Dla dnia <input type="checkbox" name="day">
+            
+            
+                    Dla całego dnia <input type="checkbox" name="dayForAll" id= "dayFor" onchange="offHour()">
             </td>
 
 
@@ -347,7 +360,7 @@
         </tr>
         <tr>
         <td colspan="6">
-            <div id="AI" class="center"></div>
+            <div id="AI" class="tras"></div>
             
         </td>
         </tr>
@@ -378,13 +391,13 @@
                         Czy leki też wydrukować ?
                     </td>
                     <td>
-                        <input type="checkbox" class="form-control" name="drugs">
+                        <input type="checkbox"  name="drugs">
                     </td>
                     <td class="center">
                         Czy treśc opisu też wydrukować
                     </td>
                     <td>
-                        <input type="checkbox" class="form-control" name="whatWork">
+                        <input type="checkbox"  name="whatWork">
                     </td>
                 </tr>
                 <tr>

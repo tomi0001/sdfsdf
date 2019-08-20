@@ -24,7 +24,6 @@ class ControllerMood extends BaseController
                 $Mood->addMood();
                 return View("Ajax.succes")->with("succes","Poprawnie dodano nastrój");
             }
-            
         }
     }
     public function addSleep() {
@@ -78,11 +77,12 @@ class ControllerMood extends BaseController
     }
     public function addDrugs() {
         if ( (Auth::check()) ) {
-            
             $Mood = new Mood;
             if (count(Input::get("name")) != 0) {
+                $Mood->setSecondMood(Input::get("idMood"));
                 $result = $Mood->checkDrugs(Input::get("name"),Input::get("dose"),Input::get("date"),Input::get("time"));
                 $id = $Mood->selectHourMood(Input::get("idMood"));
+                
                 if ($id == true) {
                     $check = $Mood->checkHourMood($Mood->hourStart,$Mood->hourEnd);
 
@@ -119,6 +119,29 @@ class ControllerMood extends BaseController
             return View("Ajax.drugsList")->with("drugs",$list);
         }
     }
-        
+    public function editMood() {
+        if ( (Auth::check()) ) {
+            $Mood = new Mood;
+            $list = $Mood->selectMood(Input::get("id"));
+            return View("Ajax.editMood")->with("list",$list)->with("i",Input::get("i"));
+        }
+    }
+    public function editMoodAction() {
+        if ( (Auth::check()) ) {
+            $Mood = new Mood;
+            $levelMood = $Mood->checkLevel(Input::get("levelMood"),"nastroju");
+            $levelAnxiety = $Mood->checkLevel(Input::get("levelAnxiety"),"lęku");
+            $levelNervousness = $Mood->checkLevel(Input::get("levelNervousness"),"zdenerowania");
+            $levelStimulation = $Mood->checkLevel(Input::get("levelStimulation"),"pobudzenia");
+            if (count($Mood->errors) != 0) {
+                return View("Ajax.error")->with("error",$Mood->errors);
+            }
+            else {
+                $Mood->updateMood(Input::get("levelMood"),Input::get("levelAnxiety"),Input::get("levelNervousness"),Input::get("levelStimulation"),Input::get("id"));
+                return View("Ajax.succes")->with("succes","Pomyslnie zmodyfikowany nastrój");
+            }
+            
+        }
+    }
     
 }

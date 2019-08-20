@@ -588,10 +588,11 @@ td.white {
     color: white;
 }
 div.center {
-    
+    background-color:  red;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
+    min-height: 1000px;
     
     
 }

@@ -628,7 +628,7 @@ div.newline {
 }
 div.tr {
     width: 100%;
-    background-color: #1B710A;
+    background-color: #154949;
     border-radius: 6px;
     min-height: 50px;
     opacity: 0.8;
@@ -651,7 +651,7 @@ div.trDrugs {
 div.tdDrugs {
         width: 27%;
     font-size: 18px;
-    background-color: #1B710A;
+    background-color: #154949;
     color: white;
     opacity: 0.8;
     text-align: center;
@@ -698,9 +698,20 @@ div.background {
  color: white;
  font-size: 21px;
 }
-
+div.setting {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
 td.white {
     color: white;
+}
+table.table {
+  background-color: opacity(0%);
+}
+
+table.table > table.table {
+  background-color: opacity(0%);
 }
 div.center {
     
@@ -709,6 +720,9 @@ div.center {
     text-align: center;
     
     
+}
+div.tras {
+    background-color:transparent; 
 }
 table.drugsList {
     width: 100%;
@@ -747,3 +761,11 @@ body {
     
 }
 
+TABLE.table > tbody > tr > td > DIV > TABLE.table  {
+     background-color:transparent;
+     color: white;
+}
+TABLE.table > tbody > tr > td > DIV  > div  > TABLE.table  {
+     background-color:transparent; 
+     color: white;
+}
